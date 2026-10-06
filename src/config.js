@@ -2,12 +2,12 @@
 export const REFRESH_MINUTES = 5
 
 // Subscribed calendars. Feed URLs are NOT stored here: each one is read from the
-// CAL_<ID>_URL variable in .env.local (e.g. CAL_HABS_URL) and served by the Vite
+// CAL_<ID>_URL variable in .env.local (e.g. CAL_GUILLAUME_URL) and served by the Vite
 // proxy at /feeds/<id>, so the URL never reaches the browser and CORS doesn't apply.
 // `name` is optional: the feed's X-WR-CALNAME is used when omitted.
 export const CALENDARS = [
-  { id: 'habs', name: 'Canadiens de Montréal', color: '#d6203a' },
-  { id: 'oilers', name: "Oilers d'Edmonton", color: '#2f6fdb' },
+  { id: 'guillaume', name: 'Guillaume', color: '#1badf8' },
+  { id: 'familial', name: 'Familial', color: '#ffcc00' },
 ]
 
 export const feedEnvVar = (id) => `CAL_${id.toUpperCase()}_URL`

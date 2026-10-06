@@ -25,8 +25,8 @@ Calendars are declared in `src/config.js`, without their URLs:
 ```js
 export const REFRESH_MINUTES = 5
 export const CALENDARS = [
-  { id: 'habs',   name: 'Canadiens de Montréal', color: '#d6203a' },
-  { id: 'oilers', name: "Oilers d'Edmonton",     color: '#2f6fdb' },
+  { id: 'guillaume', name: 'Guillaume', color: '#1badf8' },
+  { id: 'familial',  name: 'Familial',  color: '#ffcc00' },
 ]
 ```
 
@@ -41,8 +41,8 @@ cp .env.example .env.local
 ```
 
 ```sh
-CAL_HABS_URL=https://ics.calendarlabs.com/…/Montreal_Canadiens_Schedule.ics
-CAL_OILERS_URL=https://ics.calendarlabs.com/…/Edmonton_Oilers_Schedule.ics
+CAL_GUILLAUME_URL=webcal://pXX-caldav.icloud.com/published/2/…
+CAL_FAMILIAL_URL=webcal://pXX-caldav.icloud.com/published/2/…
 ```
 
 - `webcal://` links are accepted and converted to `https://`.
@@ -150,5 +150,5 @@ vite.config.js                 /feeds/<id> proxy routes built from .env.local
 - **No server-side cache:** every open tab downloads each feed on every refresh, through the proxy. That's fine on one home computer.
 - **Local network:** Vite listens only on `localhost` by default. If you start it with `--host`, devices on your network can open the page. They still can't see the feed URLs, but they can read the calendars through `/feeds/<id>`.
 - **Nothing is saved between visits:** which calendars are hidden and the last fetched data are lost on reload. You could save them in `localStorage` with a few lines, or show cached data while offline.
-- **Time zones:** it relies on ical.js's time-zone handling. `VTIMEZONE` blocks inside the feed work. A `TZID` with no definition in the feed falls back to "floating" local time. The calendarlabs feeds use UTC, so this doesn't affect them.
+- **Time zones:** it relies on ical.js's time-zone handling. `VTIMEZONE` blocks inside the feed work. A `TZID` with no definition in the feed falls back to "floating" local time.
 - **No tests yet.** `utils/date.js` and `layoutDay()` are pure functions, so they'd be the easiest place to start with Vitest, which plugs straight into the existing Vite setup.

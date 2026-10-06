@@ -2,6 +2,7 @@ import { ref, computed } from 'vue'
 import ICAL from 'ical.js'
 import { CALENDARS, REFRESH_MINUTES, feedPath, feedEnvVar } from '../config'
 import { addDays, DAY_MS } from '../utils/date'
+import { describeRecurrence } from '../utils/recurrence'
 
 // Recurring events are expanded within this window around "now".
 const EXPANSION_DAYS = 400
@@ -40,7 +41,8 @@ let refreshTimer = null
 let clockTimer = null
 let users = 0
 
-function makeOccurrence(cal, item, start, end, recurring) {
+// `recurrence` is the series' description (see describeRecurrence), or null for a one-off event.
+function makeOccurrence(cal, item, start, end, recurrence = null) {
   const allDay = start.isDate
   const startDate = start.toJSDate()
   let endDate = end ? end.toJSDate() : startDate
@@ -58,7 +60,8 @@ function makeOccurrence(cal, item, start, end, recurring) {
     start: startDate,
     end: endDate,
     allDay,
-    recurring,
+    recurring: recurrence !== null,
+    recurrence,
   }
 }
 
@@ -87,15 +90,18 @@ function parseIcs(text, cal) {
   for (const ev of masters.values()) {
     if (!ev.startDate) continue
     if (!ev.isRecurring()) {
-      events.push(makeOccurrence(cal, ev, ev.startDate, ev.endDate, false))
+      events.push(makeOccurrence(cal, ev, ev.startDate, ev.endDate))
       continue
     }
+    const rrule = ev.component.getFirstPropertyValue('rrule')
+    // Series defined only by RDATE (or an unusual FREQ) fall back to a plain label.
+    const recurrence = (rrule && describeRecurrence(rrule, ev.startDate.toJSDate())) || 'Récurrent'
     const it = ev.iterator()
     for (let next, n = 0; (next = it.next()) && n < MAX_OCCURRENCES; n++) {
       if (next.compare(rangeEnd) > 0) break
       const occ = ev.getOccurrenceDetails(next)
       if (occ.endDate.compare(rangeStart) < 0) continue
-      events.push(makeOccurrence(cal, occ.item, occ.startDate, occ.endDate, true))
+      events.push(makeOccurrence(cal, occ.item, occ.startDate, occ.endDate, recurrence))
     }
   }
   return { name: feedName, events }

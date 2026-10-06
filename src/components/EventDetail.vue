@@ -89,7 +89,7 @@ const notesHtml = computed(() => {
 
       <div v-if="event.location || event.recurring || event.status" class="card">
         <div v-if="event.location" class="line"><span>📍 Lieu</span><span>{{ event.location }}</span></div>
-        <div v-if="event.recurring" class="line"><span>⟳ Répétition</span><span>Récurrent</span></div>
+        <div v-if="event.recurring" class="line"><span>⟳ Répétition</span><span>{{ event.recurrence }}</span></div>
         <div v-if="event.status" class="line"><span>Statut</span><span>{{ STATUS_LABELS[event.status.toUpperCase()] ?? event.status }}</span></div>
       </div>
 

@@ -7,9 +7,27 @@ import { addDays, DAY_MS } from '../utils/date'
 const EXPANSION_DAYS = 400
 const MAX_OCCURRENCES = 2000
 
+// Text colour for content drawn on top of a calendar colour: white or near-black,
+// whichever has the higher WCAG contrast (e.g. near-black on yellow).
+function textOn(hex) {
+  const channel = (i) => {
+    const v = parseInt(hex.slice(1 + i * 2, 3 + i * 2), 16) / 255
+    return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4
+  }
+  const l = 0.2126 * channel(0) + 0.7152 * channel(1) + 0.0722 * channel(2)
+  return (l + 0.05) / 0.05 > 1.05 / (l + 0.05) ? '#1c1c1e' : '#fff'
+}
+
 // Module-level state: every component calling useCalendars() shares it.
 const calendars = ref(
-  CALENDARS.map((c) => ({ ...c, name: c.name ?? c.id, visible: true, error: null, loaded: false })),
+  CALENDARS.map((c) => ({
+    ...c,
+    name: c.name ?? c.id,
+    onColor: textOn(c.color),
+    visible: true,
+    error: null,
+    loaded: false,
+  })),
 )
 const eventsByCalendar = ref({})
 const loading = ref(false)

@@ -58,6 +58,7 @@ function layoutDay(day) {
       left: `${(it.col / it.cols) * 100}%`,
       width: `${100 / it.cols}%`,
       '--c': calendarById.value[it.ev.calendarId]?.color,
+      '--on-c': calendarById.value[it.ev.calendarId]?.onColor,
     },
   }))
 }
@@ -99,7 +100,7 @@ onMounted(async () => {
           :key="ev.id"
           class="chip truncate"
           :class="{ selected: selected?.id === ev.id }"
-          :style="{ '--c': calendarById[ev.calendarId]?.color }"
+          :style="{ '--c': calendarById[ev.calendarId]?.color, '--on-c': calendarById[ev.calendarId]?.onColor }"
           @click="emit('select', ev)"
         >{{ ev.title }}</button>
       </div>
@@ -145,6 +146,14 @@ onMounted(async () => {
 .row {
   display: grid;
   grid-template-columns: 52px repeat(7, minmax(0, 1fr));
+}
+
+/* The body scrolls; reserving the same scrollbar gutter on the rows above
+   keeps their columns exactly as wide as the body's. */
+.head,
+.allday {
+  overflow-y: hidden;
+  scrollbar-gutter: stable;
 }
 
 .head {
@@ -202,13 +211,14 @@ onMounted(async () => {
 
 .allday .chip.selected {
   background: var(--c);
-  color: #fff;
+  color: var(--on-c, #fff);
 }
 
 .scroll {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  scrollbar-gutter: stable;
 }
 
 .body {
@@ -299,11 +309,11 @@ onMounted(async () => {
 
 .event.selected {
   background: var(--c);
-  color: #fff;
+  color: var(--on-c, #fff);
   opacity: 1;
 }
 
 .event.selected .time {
-  color: #fff;
+  color: var(--on-c, #fff);
 }
 </style>

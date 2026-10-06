@@ -26,9 +26,9 @@ const status = computed(() => {
   if (!ev) return null
   const t = now.value
   if (ev.start <= t && t < ev.end) {
-    return { label: 'En cours', detail: `encore ${formatDuration(ev.end - t)}`, live: true }
+    return { label: 'En cours', detail: `encore ${formatDuration(ev.end - t)}`, highlight: true }
   }
-  if (t < ev.start) return { label: 'À venir', detail: formatRelative(ev.start, t) }
+  if (t < ev.start) return { label: 'À venir', detail: formatRelative(ev.start, t), highlight: true }
   return { label: 'Terminé', detail: formatRelative(ev.end, t) }
 })
 
@@ -67,7 +67,7 @@ const notesHtml = computed(() => {
       </div>
 
       <div class="card">
-        <div class="status" :class="{ live: status.live }">
+        <div class="status" :class="{ highlight: status.highlight }">
           <span>{{ status.label }}</span>
           <span>{{ status.detail }}</span>
         </div>
@@ -182,7 +182,7 @@ h2 {
   font-size: 16px;
 }
 
-.status.live {
+.status.highlight {
   background: var(--accent-soft);
   color: var(--accent);
 }

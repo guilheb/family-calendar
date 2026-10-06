@@ -53,7 +53,7 @@ const headers = computed(() => days.value.slice(0, 7).map((d) => formatWeekdaySh
           :key="ev.id"
           class="ev"
           :class="{ selected: selected?.id === ev.id, allday: ev.allDay }"
-          :style="{ '--c': calendarById[ev.calendarId]?.color }"
+          :style="{ '--c': calendarById[ev.calendarId]?.color, '--on-c': calendarById[ev.calendarId]?.onColor }"
           :title="`${ev.title}${ev.allDay ? '' : ' · ' + formatTime(ev.start)}`"
           @click="emit('select', ev)"
         >
@@ -168,11 +168,11 @@ const headers = computed(() => days.value.slice(0, 7).map((d) => formatWeekdaySh
 
 .ev.selected {
   background: var(--c);
-  color: #fff;
+  color: var(--on-c, #fff);
 }
 
 .ev.selected .dot {
-  background: #fff;
+  background: var(--on-c, #fff);
 }
 
 .more {

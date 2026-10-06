@@ -205,6 +205,11 @@ h2 {
   padding-bottom: 0;
 }
 
+.line span:first-child {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
 .line span:last-child {
   color: var(--muted);
   text-align: right;
